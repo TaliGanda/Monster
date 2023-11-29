@@ -13,10 +13,10 @@ INSTALL TOOLS
     4. apt install git
     5. apt install python3-pip
     6. apt install python2 && apt install python3
-    7. 
+    7. git clone https://github.com/TaliGanda/Monster.git
     8. cd Monster
     9. pip3 install -r requirements.txt
-    10. 
+    10. python3 Mosnter_CCTV.py
     11. If the tool has an error in the module, try typing python3 setup.py
 
     Linux:
@@ -28,10 +28,10 @@ INSTALL TOOLS
     4. apt install pip / pip3
     5. apt install python3
     6. apt install git
-    7. 
+    7. git clone https://github.com/TaliGanda/Monster.git
     8. cd Monster
     9. pip3 install -r requirements.txt
-    10. 
+    10. python3 Mosnter_CCTV.py
     11. If the tool has an error in the module, try typing python3 setup.py
 
     Termux:
@@ -43,9 +43,9 @@ INSTALL TOOLS
     4. pkg install python3
     5. pkg install git
     6. pkg install figlet
-    7. 
+    7. git clone https://github.com/TaliGanda/Monster.git
     8. cd Monster
     9. pip3 install -r requirements.txt
-    10. 
+    10. python3 Mosnter_CCTV.py
     11. If the tool has an error in the module, try typing python3 setup.py
 ```
