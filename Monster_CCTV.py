@@ -1,0 +1,437 @@
+import sys
+try:
+    print('')
+except SyntaxError as e:
+    if e == True:
+        print("Hey Idiot, Use python3.")   
+import time
+print("Please Wait.. The Tools Is Loading Assets..")
+time.sleep(2)
+try:
+    print("Checking For Module..")
+except ModuleNotFoundError as e:
+    if e == True:
+        print('Module Not Found: ', (e))
+        
+import time
+import os
+from os.path import exists
+import googlesearch #googlesearch-python
+import wget #wget
+import urllib.request #urllib
+import colorama
+from threading import Thread, Lock #threading2
+from subprocess import Popen, PIPE
+from signal import SIGINT, signal
+import scapy #scapy
+from colorama import Fore, Style, init
+import random
+import socket
+import requests
+import sys
+from googlesearch import search
+from subprocess import getoutput
+from urllib.parse import urlparse
+import argparse
+import ipaddress
+import faker
+from faker import Faker
+from bs4 import BeautifulSoup
+import re
+import phonenumbers
+from phonenumbers import timezone, geocoder, carrier
+from pythonping import ping
+import exiftool
+import importlib
+print(f"""{white}
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣲⣶⠒⠷⠶⠤⠴⠦⠤⠤⢤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣴⣶⠚⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀        ⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠴⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⢌⣛⠶⢤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        ⠀⠠⢚⠟⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠱⡄⠙⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀       ⠀⢀⡤⠖⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣀⠀⣀⣤⣧⠔⠛⠓⠲⠤⢄⣀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀        ⠀⠀⢐⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣤⣄⣠⣤⣴⣾⣿⣿⣾⡗⠀⢀⣀⢤⠐⠠⠤⣉⠓⠦⣄⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀        ⢀⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠒⠒⠶⠶⢾⣿⡿⠛⢻⣻⠛⢻⣿⣿⠟⣋⣺⣿⠏⠀⠴⠿⠹⠋⠀⠀⠀⠀⠈⠀⠨⠳⣄⠀⠀
+⠀⠀⠀⠀⠀        ⠀⠀⢐⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣤⠤⠄⠐⢾⣿⣝⠤⣀⢀⡠⣱⣿⣿⣿⣿⠿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡆⠀
+⠀⠀⠀⠀⠀        ⠀⢠⡂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢉⣛⣺⣿⣾⣛⣽⣿⡟⠁⠀⠀⢀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡀
+⠀⠀⠀⠀        ⠀⠐⡟⠀⠀⠀⠀⡠⠖⠀⠀⠀⢀⡴⠃⠀⠀⠀⠀⠀⠀⡈⠉⢉⡽⠿⢛⡿⢛⠯⠭⣒⣚⣩⣭⣭⣤⡤⠭⠭⢭⣥⣀⣉⣑⣒⢵⡀⠀⠀⢸⡇
+⠀⠀⠀⠀        ⠀⣰⠃⠀⢀⡔⠋⠀⠀⠀⣠⡴⠋⠀⠀⠀⠀⣠⣤⡴⠋⠀⠀⠀⠀⠀⠾⢶⣾⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠳⡀⠀⣸⠃
+⠀⠀⠀        ⠀⢰⠟⢀⣴⠏⠀⡀⢀⣴⡿⠋⠀⠀⠀⢀⡴⠟⠋⠁⠀⠀⠀⠀⢀⣠⣴⣾⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣇⠔⠁⠀
+⠀⠀⠀        ⠀⣞⣴⣿⠃⢠⣾⣴⣿⠋⠀⠀⠀⠀⠐⠋⠀⠀⠀⠀⠀⢐⣚⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠋⠁⠀⠀⠀
+⠀⠀        ⠀⣸⣿⣿⣧⣶⣿⣿⣿⠗⠁⠀⡠⠂⠀⢀⠀⠀⠀⠀⠂⢉⣭⣿⣿⣿⣿⣿⣿⣿⣿⣿⠛⡟⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀        ⢀⠼⢻⣿⣿⣿⣿⣿⣿⠁⢀⣴⠏⢀⣠⠞⠁⢀⠀⠀⠀⣠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠱⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀        ⠀⣠⣿⣿⣿⣿⣿⣿⣧⣾⡿⣡⣾⣿⠃⣠⡾⠁⠀⣀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠂⠀⢻⣍⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀        ⠈⣽⣿⣿⣿⣿⣿⣿⡟⠉⣰⣿⡿⣡⣾⣿⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⢻⣶⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀        ⣠⣿⣿⣿⣿⣿⣿⣿⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⣱⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⢸⣾⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠐⠛⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢫⣿⠏⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣼⡄⠀⣿⣿⡏⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀        ⠀⣾⡿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢟⣴⡿⢋⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣤⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀        ⠀⠁⠀⡿⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀       ⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀        ⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀        ⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⠿⢿⣿⣿⣿⣿⣿⣿⣿⢿⡿⠁⣿⠏⠘⢿⣿⣿⣿⠋⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀        ⠀⠀⠀⠿⠋⣿⡿⠋⣸⠟⠁⠀⣾⣿⣿⣿⣿⣿⠟⠁⠈⠀⠀⠹⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀        ⠀⠀⠀⠀⠁⠀⠀⠉⠀⠀⠰⠿⣿⣿⠿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        ⠀⠀⠀⠀⠀⠀⠀⠙⡏⠀⠻⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        """)
+    lokasi = input(f'\n\033[1;34mLokasi [Location] / Daerah :')
+    dork = ['inurl ', 'intext ', 'intitle ', 'cgi ', 'view.shtml']
+    dorkc = ['/view.shtml', 'cctv', 'CgiStart?page=', 'liveapplet', 'Webcam.html', 'EvoCam', 'view/view.shtml', 'cctv/view.shtml', 'cctv/index.shtml', 'cctv/index.php', 'cctv/index.html']
+    
+    for cctv in dork:
+        try:
+            rand_user = random.choice(user_agents)
+            rand_ipv4 = random.choice(address)
+            rand_ipv6 = random.choice(ip6)    
+            print(info + f'Searching CCTV...')    
+            for hijacked in search(f'{cctv}cctv {cctv}{lokasi}', tld='com', num=1, start=1, stop=None, pause=4):
+                print(success + f'Found : ')
+                print(hijacked)
+            else:
+                print(fail + f'Cant find')
+        except urllib.error.HTTPError as e:
+                if e.code == 429:
+                    print(fail + f'[429] Too Many Request, Please Wait')
+                    time.sleep(4)
+    print('CCTV Hijacker Done..')
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
+#TELEGRAM@LEZXXY
